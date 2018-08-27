@@ -59,7 +59,6 @@ cumulative_hours = subject_dates_hours %>%
   
 ###### to arrange plot by slope steepness: need to cal hours traing/days for first 40 hours
 ##### use last days data created further down
-
 training_slope = cumulative_hours %>% 
   subset(cum_training_hours < 40) %>%
   group_by(Subject) %>%
@@ -98,8 +97,6 @@ standard_date<-ggplot(data = subset(cumulative_hours_with_slope,Subject=="11"),
   theme(legend.position="none")
 
 ###plot with weeks as x-axis
-library(scales)
-
 cumulative_hours_with_slope$date <- as.Date(cumulative_hours_with_slope$date)
 
 ggplot(data = subset(cumulative_hours_with_slope,Subject=="7"),
@@ -157,7 +154,7 @@ no_first = cumulative_hours_with_slope %>%
     scale_color_viridis_d()
   
 #subset above plot to show subjects who did badly on last three assessments
-  ggplot(data = subset(no_first,Subject %in% c("1","2","5","9","11","16","19")),
+ggplot(data = subset(no_first,Subject %in% c("1","2","5","9","11","16","19")),
          aes(x = plot_count, y = cum_training_hours, col = as.factor(Subject)),
          reorder(Subject, hours_days))+
     geom_line()+
@@ -170,7 +167,7 @@ no_first = cumulative_hours_with_slope %>%
                aes(x = plot_count, y = cum_training_hours,col = as.factor(Subject)))
 
 #####overall practice rates
-  practice_rates = cumulative_hours %>% 
+practice_rates = cumulative_hours %>% 
     group_by(Subject) %>%
     mutate(days = as.numeric(max(date) - min(first_date)),
            sum_days=sum(days,na.rm = T),
@@ -180,7 +177,6 @@ no_first = cumulative_hours_with_slope %>%
     distinct()
   
 ###training in the last month
-
 last_month_data = subject_dates_hours %>% 
   mutate(
     date = as.Date(Date, "%m/%d/%y"),
@@ -212,8 +208,6 @@ individuals_relative_average_new<-subset(individuals_relative_average, variable 
 replace_na_with_last<-function(x,a=!is.na(x)){
   x[which(a)[c(1,1:sum(a))][cumsum(a)+1]]
 }
-
-str(last_assessment_data)
 
 last_assessment_data = subject_dates_hours %>% 
   mutate(date = as.Date(Date, "%m/%d/%y"),
@@ -279,6 +273,7 @@ training_scores<-merge(training_scores,last_days_data[ , c("knapper","assessment
 
 training_scores$hours_days<-training_scores$hours_to_next/training_scores$days
 training_scores$log_training_hours<-log(training_scores$hours_days)
+training_scores$log_training_hours[training_scores$log_training_hours == -Inf] <- 0
 training_scores$stage<-ifelse(training_scores$assessment %in% c(4:9),"late","early")
 
 training_scores_late<-subset(training_scores,assessment %in% c(4:9)) #effect of practice is NULL before assessment 4
@@ -295,11 +290,21 @@ stage_labeller <- function(variable,value){
 
 ggplot(training_scores,aes(colour=stage))+
   geom_jitter(aes(log_training_hours,value, colour=stage)) + 
-  geom_smooth(aes(log_training_hours,value, colour=stage), method=lm, se=FALSE) +
+  geom_smooth(data=subset(training_scores,stage=="late"),aes(log_training_hours,value, colour=stage), method=lm, se=FALSE) +
   facet_wrap(~stage,labeller=stage_labeller)+ 
   theme(legend.position="none")+
   labs(x = "Log training hours / day", y = "Predicted score")+
   scale_color_manual(values = c("red", "black"))+
+  theme(text = element_text(size=20))
+
+#colored by knapper
+ggplot(training_scores,aes(colour=as.factor(knapper)))+
+  geom_jitter(aes(log_training_hours,value, colour=as.factor(knapper))) + 
+  geom_smooth(data=subset(training_scores,stage=="late"),aes(log_training_hours,value, colour=stage), method=lm, se=FALSE) +
+  facet_wrap(~stage,labeller=stage_labeller)+ 
+  #theme(legend.position="none")+
+  labs(x = "Log training hours / day", y = "Predicted score")+
+  scale_color_viridis_d()+
   theme(text = element_text(size=20))
 
 cor.test(training_scores_early$log_training_hours,training_scores_early$value)
