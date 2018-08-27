@@ -682,7 +682,6 @@ mdata <- mdata %>%
          value = as.numeric(as.character(value))) 
 
 #plot to check if linear relationship holds
-
 mdata_subset<-filter(mdata, variable!="Score_observed", variable!="linear")
 
 mdata_subset_geom_smooth<-
@@ -723,6 +722,8 @@ individuals_relative_average<-
   mutate(score_median=median(value)) %>%
   ungroup() %>%
   mutate(score_relative_median=value-score_median)
+
+write.csv(individuals_relative_average,"individuals_relative_average.csv")
 
 #need to extract 1,5,6,7,9 for Erin's scoring (some individs have assessment 5,6,7 as one right before scan2)
 individuals_relative_average_1<-subset(individuals_relative_average, assessment=="1")
