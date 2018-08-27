@@ -1,12 +1,5 @@
 ##############Core and handaxe weights####################
-expert_merged_start_end_weight_data<-read.csv("/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/expert_merged_start_end_weight_data.csv", header = T, na.strings=c('',""))
-
-#calculate delta columns and delete start and end weight columns
-expert_merged_start_end_weight_data$delta_weight<-expert_merged_start_end_weight_data$Core.start.weight-expert_merged_start_end_weight_data$Core.end.weight
-expert_merged_start_end_weight_data$Core.start.weight<-NULL
-expert_merged_start_end_weight_data$Core.end.weight<-NULL
-
-write.csv(expert_merged_start_end_weight_data,"/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/expert_start_end_weight_data.csv") #backup for file that is missing above
+expert_merged_start_end_weight_data<-read.csv("/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/expert_start_end_weight_data.csv", header = T, na.strings=c('',""))
 
 ######add shape data
 expert_shape_asymetry<-read.csv("/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/Handaxe shape data/merged_expert_plan_area_asymetry_data.csv",header = T, na.strings=c('',""))
@@ -89,8 +82,6 @@ expert_complete_experiment_data_reduced<-expert_complete_experiment_data_merged[
                                                           "Dim.1", "Dim.2",
                                                           "profile_asymetry_index","plan_asymetry_index",
                                                           "percent_unflaked_area","percent_bifacially_flaked","flake_scar_density")]
-
-colnames(handaxe_postpca_test)
 
 ##NO DELTA PROFILE THICKNESS FOR EXPERTS
 #scale data

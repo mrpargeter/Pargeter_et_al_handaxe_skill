@@ -613,68 +613,6 @@ ggplot(submit_all_expert,size=1)+
 
 write.csv(submit_all_expert,"submit_all_expert.csv")
 
-#RF confidence intervals
-rf.expert.preds_cart <- rfPredVar(fit_4,rf.data=novice_expert_combined,CI=TRUE,tree.type='rf')
-preds_expert <- rf.expert.preds_cart
-preds_expert$tree <- 'Random Forest'
-preds_expert$pred.ij.var <- NULL
-preds_expert$measured <- novice_expert_combined[ ,'Score']
-preds_expert$deviance <- preds_expert$pred - preds_expert$measured
-preds_expert$CI_length<-ifelse(preds_expert$u.ci > preds_expert$l.ci, preds_expert$u.ci - preds_expert$l.ci, preds_expert$l.ci - preds_expert$u.ci)
-
-#add data strings to plot relationship with score
-preds_expert$assessment <- rep(novice_expert_combined$assessment)
-preds_expert$knapper <- rep(novice_expert_combined$knapper)
-
-ggplot(preds_expert,aes(measured,pred)) +
-  geom_point(size=2,aes(colour = cut(measured, c(1, 4.5, 4.6, 5)))) +
-  #geom_abline(intercept=0,slope=1,lty=2,color='#999999') +
-  geom_errorbar(aes(ymin=l.ci,ymax=u.ci)) +
-  geom_smooth(method = "lm", se=F,na.rm = T)+
-  xlab('Observed Score') + ylab('Predicted Score') +
-  theme_bw() + 
-  theme(legend.position = "none")+
-  scale_color_manual(name = "",
-                     values = c("(1,4.5]" = "black",
-                                "(4.6,5]" = "red"))+ 
-  theme(legend.position="none")+
-  theme(text = element_text(size=20))
-
-#examine confidence interval lengths and deviance
-
-detach(package:plyr)
-preds_expert_ci <-
-  preds_expert %>%
-  group_by(assessment) %>%
-  mutate(ave_ci_length = mean(CI_length))
-
-preds_expert_ci$assessment <- factor(preds_expert_ci$assessment, c("1", "2", "3", "4","5","6","7","8","9","10"))
-
-#create color palette
-colourCount = length(unique(preds_expert_ci$assessment))
-library(RColorBrewer)
-getPalette = colorRampPalette(brewer.pal(4, "Set1"))
-
-ggplot(preds_expert_ci, aes(assessment, ave_ci_length, fill=assessment)) +
-  geom_bar(position = "dodge", stat="identity")+ 
-  scale_fill_manual(values = getPalette(colourCount))+
-  scale_y_continuous(name="Average prediction confidence interval length")+
-  scale_x_discrete(name="Assessment")+
-  guides(fill=FALSE)+
-  theme(text = element_text(size=20)) 
-
-ggplot(preds_expert_ci, aes(assessment, deviance, fill=assessment)) +
-  geom_bar(position = "dodge", stat="identity")+ 
-  scale_fill_manual(values = getPalette(colourCount))+
-  scale_y_continuous(name="Deviance of predicted values from observed values")+
-  scale_x_discrete(name="Assessment")+
-  guides(fill=FALSE)+
-  theme(text = element_text(size=20))+ 
-  geom_bar(position = 'dodge', stat = 'summary', fun.y = 'mean') +
-  geom_point(aes(x = assessment), size=2,shape = 21, position = position_dodge(width = 1))+ 
-  geom_hline(color="red",yintercept = .50)+ 
-  geom_hline(color="red",yintercept = -.50)
-
 ###################With expert handaxes predicted from previous model######################
 
 test_expert<-expert_complete_experiment_data_reduced_scaled

@@ -4,6 +4,8 @@ library(dplyr)
 library(psych)
 library(factoextra)
 
+complete_experiment_data_handaxe_main<-read.csv("/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/complete_experiment_data_handaxe_main.csv", header = T)
+
 handaxe_shapes<- complete_experiment_data_handaxe_main[ , which(names(complete_experiment_data_handaxe_main) %in% 
               c("knapper","assessment","width_0.1","width_0.2","width_0.3","width_0.4",
               "width_0.5","width_0.6","width_0.7","width_0.8","width_0.9","thickness_0.1",
