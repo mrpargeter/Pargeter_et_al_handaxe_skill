@@ -13,7 +13,7 @@ Please cite this compendium as:
 
 ### Usage
 
-Download the files to your desktop, open `Pargeter_et_al_open_air.Rproj` in RStudio, then open `phillips_etal_rcode.Rmd` and knit the Rmd to run the code and generate the results and plots found in the paper. 
+Download the files to your desktop, open 'Pargeter_et_al_handaxe_skill.Rproj' in RStudio, then open `phillips_etal_rcode.Rmd` and knit the Rmd to run the code and generate the results and plots found in the paper. 
 
 Or, run the code in your browser using binder. Click on the pink binder button at the top, once inside Jupyter Notebook, RStudio Server should be an option under the menu "New" in the top right. Click on "New" in the top right, and at the bottom will be `RStudio Session`. Click that and your RStudio session will begin momentarily.
 
