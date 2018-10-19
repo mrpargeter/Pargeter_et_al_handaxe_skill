@@ -25,6 +25,15 @@
 #nickname       Feather Spray   
 
 ################
+# Notes on package versions
+# We use the scale_color_virdis addition to ggplot
+# Please make sure you are running the latest version of ggplot (>2.2.1)
+# Also, the recode function in the 'car' package overwrites 'dplyr's'
+# recode function (the one we use). To stop this from happening
+# make sure that dplyr loads after car
+################
+
+################
 # Load libraries
 ################
 
@@ -74,7 +83,7 @@ lapply(list.of.packages, require, character.only = TRUE)
 # Set to source directory with all .csv datafiles provided
 # through the Open Science repository
 
-setwd("/Users/stoutlab/Google Drive/Toolmaking Project/Pargeter work folder/Toolmaking Stats_Pargeter/Language of Technology/Datafiles")
+setwd("../Pargeter_et_al_handaxe_data_files")
 
 ## Add datasets
 
@@ -1639,8 +1648,7 @@ return(different_core_numbers)
 # Extract individuals model component
 # Performs several functions related to
 # individual performance in the study
-# Returns: individual_interpolated_slopes and
-# tests how many hours to reach perfect skill score,
+# Returns: tests how many hours to reach perfect skill score,
 # tests the correlation between first last nada vs. RF
 ##############################
 
@@ -2061,12 +2069,12 @@ return(different_core_numbers)
   
   slopes_lm<-summary(lm(one~nine+dummy, data=correlation_data_test))
   
-  return(list(individual_interpolated_slopes,complete_data_indiv,slopes_lm))
+  return(list(complete_data_indiv,slopes_lm))
 }
 
   #the unique operator below is from the zeallot package
 
-  c(individual_interpolated_slopes,complete_data_indiv,
+  c(complete_data_indiv,
     linear_model_on_slopes) %<-% 
     individuals_instudy_function(handaxe_pca_function)
 
